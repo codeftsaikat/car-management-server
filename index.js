@@ -2,16 +2,20 @@ const express = require("express");
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
+const cookieParser = require("cookie-parser");
 require("dotenv").config();
 const app = express();
 const port = process.env.PORT || 5000;
 
 // middleware
-app.use(cors({
-  origin:['http://localhost:5173'],
-  credentials:true
-}));
+app.use(
+  cors({
+    origin: ['http://localhost:5173'],
+    credentials: true,
+  })
+);
 app.use(express.json());
+app.use(cookieParser());
 
 // MongoDB
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.juvtn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
@@ -33,20 +37,18 @@ async function run() {
     const serviceCollection = client.db("carManagement").collection("services");
     const bookingCollection = client.db("carManagement").collection("bookings");
 
-    // auth related api
-    app.post("/jwt", (req, res) => {
+    // jwt related api
+    app.post("/jwt", async (req, res) => {
       const user = req.body;
       console.log(user);
-      const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-        expiresIn: "1hr",
-      });
+      const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1h" });
       res
-        .cookie("name", token, {
-          httpOnly: true,
-          secure: false,
-          sameSite: "none",
-        })
-        .send({ success: true });
+      .cookie('token',token,{
+        httpOnly:true,
+        secure:false,
+        // sameSite:'none'
+      })
+      .send({success:true});
     });
 
     // services related api
@@ -69,6 +71,8 @@ async function run() {
     //bookings
     app.get("/bookings", async (req, res) => {
       console.log(req.query.email);
+      console.log("token is here:", req.cookies.token);
+
       let query = {};
       if (req.query.email) {
         query = { email: req.query.email };
