@@ -10,7 +10,11 @@ const PORT = process.env.PORT || 5000;
 // middleware
 app.use(
   cors({
-    origin: ["http://localhost:5173"],
+    origin: [
+      // "http://localhost:5173",
+      "cars-management-3f382.web.app",
+      "cars-management-3f382.firebaseapp.com"
+    ],
     credentials: true,
   })
 );
