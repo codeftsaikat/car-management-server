@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 5000;
 app.use(
   cors({
     origin: [
-      "http://localhost:5173",
+      // "http://localhost:5173",
       "cars-management-3f382.web.app",
       "cars-management-3f382.firebaseapp.com"
     ],
