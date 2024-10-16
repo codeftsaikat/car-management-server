@@ -11,9 +11,8 @@ const PORT = process.env.PORT || 5000;
 app.use(
   cors({
     origin: [
-       "http://localhost:5173",
-      "cars-management-3f382.web.app",
-      "cars-management-3f382.firebaseapp.com"
+       "https://car-management-application.vercel.app",
+      "https://car-management-application-git-main-saikat-ds-projects.vercel.app",
     ],
     credentials: true,
   })
